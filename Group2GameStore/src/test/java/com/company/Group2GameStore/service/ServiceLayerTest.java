@@ -48,6 +48,7 @@ public class ServiceLayerTest {
 
     }
 
+    //mock
     private void setUpGameRepositoryMock() {
         gameRepository = mock(GameRepository.class);
         Game game = new Game();
@@ -103,7 +104,7 @@ public class ServiceLayerTest {
         consoleList.add(console1);
 
         doReturn(console1).when(consoleRepository).save(console2);
-        doReturn(Optional.of(console1)).when(consoleRepository).findById(1);
+        doReturn(Optional.of(console1)).when(consoleRepository).findById(2);
         doReturn(consoleList).when(consoleRepository).findAll();
         doReturn(consoleList).when(consoleRepository).findConsoleByManufacturer("Nintendo");
     }
@@ -172,6 +173,8 @@ public class ServiceLayerTest {
         doReturn(invoiceList).when(invoiceRepository).findAll();
     }
 
+
+    //find All
     @Test
     public void findAllInvoices() {
         List<InvoiceViewModel> fromService = service.getAllInvoices();
@@ -214,14 +217,35 @@ public class ServiceLayerTest {
     }
 
     @Test
-    public void findAllTshirts() {
-        List<Game> gameSearch = service.getAllGames();
+    public void findAllConsolesByManufacturer(){
+        List<Console> consoleSearch = service.getConsoleByManufacturer("Nintendo");
 
-        assertEquals(1, gameSearch.size());
+        assertEquals(1, consoleSearch.size());
     }
 
+    
+    @Test
+    public void findAllTshirts() {
+        List<Tshirt> tshirtSearch = service.getAllTShirts();
 
+        assertEquals(1, tshirtSearch.size());
+    }
 
+    @Test
+    public void findAllTshirtsByColor() {
+        List<Tshirt> tshirtSearch = service.findByColor("gold");
+
+        assertEquals(1, tshirtSearch.size());
+    }
+
+    @Test
+    public void findAllTshirtsBySize() {
+        List<Tshirt> tshirtSearch = service.findBySize("s");
+
+        assertEquals(1, tshirtSearch.size());
+    }
+
+    //Create
     @Test
     public void saveFindGame() {
         Game game = new Game();
@@ -237,20 +261,35 @@ public class ServiceLayerTest {
         assertEquals(game, fromService);
     }
 
-//    @Test
-//    public void saveFindConsole() {
-//        Console console1 = new Console();
-//        console1.setModel("Switch");
-//        console1.setManufacturer("Nintendo");
-//        console1.setMemoryAmount("256gb");
-//        console1.setProcessor("NotAGoodOne");
-//        console1.setPrice(new BigDecimal("199.99"));
-//        console1.setQuantity(5);
-//        console1.setId(2);
-//
-//        Console fromService = service.getConsoleById(console1.getId());
-//        assertEquals(console1, fromService);
-//    }
 
+    @Test
+    public void saveFindConsole() {
+        Console console1 = new Console();
+        console1.setModel("Switch");
+        console1.setManufacturer("Nintendo");
+        console1.setMemoryAmount("256gb");
+        console1.setProcessor("NotAGoodOne");
+        console1.setPrice(new BigDecimal("199.99"));
+        console1.setQuantity(5);
+        console1.setId(2);
+
+        Console fromService = service.getConsoleById(console1.getId());
+        assertEquals(console1, fromService);
+    }
+
+    @Test
+    public void saveFindTshirt() {
+        Tshirt tshirt = new Tshirt();
+        tshirt.settShirtId(1);
+        tshirt.setTshirt("League of Legends");
+        tshirt.setColor("gold");
+        tshirt.setSize("s");
+        tshirt.setDescription("game merch");
+        tshirt.setPrice(new BigDecimal(99.99));
+        tshirt.setQuantity(100);
+
+        Tshirt fromService = service.getTshirtById(tshirt.gettShirtId());
+        assertEquals(tshirt, fromService);
+    }
 
 }
