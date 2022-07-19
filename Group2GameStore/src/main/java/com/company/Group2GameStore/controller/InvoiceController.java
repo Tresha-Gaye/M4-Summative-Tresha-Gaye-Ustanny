@@ -17,34 +17,35 @@ public class InvoiceController {
     @Autowired
     ServiceLayer serviceLayer;
 
-    //Create invoice
+//  Create invoice
     @RequestMapping(value = "/invoice", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public InvoiceViewModel createInvoice(@RequestBody InvoiceViewModel invoice) {
         return serviceLayer.createANewInvoice(invoice);
     }
 
-    //Find all invoice, filter by name?
+//  Find all invoice, filter by name?
     @RequestMapping(value="/invoice", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<InvoiceViewModel> getAllInvoice() {
         return serviceLayer.getAllInvoices();
     }
-//
-//    //Find by id
+
+//    Find by id
     @RequestMapping(value = "/invoice/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public InvoiceViewModel getInvoiceById(@PathVariable int id) {
         return serviceLayer.getInvoiceById(id);
     }
-//
-////    Update by id
+
+//   Update by id
     @RequestMapping(value = "/invoice/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateInvoiceById(@PathVariable int id, @RequestBody InvoiceViewModel ivm) {
         serviceLayer.updateInvoiceById(ivm);
     }
 
+//  Update without ID - needed for front end
     @RequestMapping(value = "/invoice", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateInvoice(@RequestBody Invoice ivm) {
@@ -52,8 +53,8 @@ public class InvoiceController {
     }
 
 
-//
-//    //Delete by id
+
+//    Delete by id
     @RequestMapping(value = "/invoice/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteInvoice(@PathVariable int id) { serviceLayer.deleteInvoiceById(id);}

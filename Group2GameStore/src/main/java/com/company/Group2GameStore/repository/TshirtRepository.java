@@ -10,5 +10,6 @@ import java.util.List;
 public interface TshirtRepository extends JpaRepository<Tshirt, Integer> {
     List<Tshirt> findByColor(String color);
     List<Tshirt> findBySize(String size);
+
 //    List<Tshirt> findByColorAndSize(String color, String size);
 }

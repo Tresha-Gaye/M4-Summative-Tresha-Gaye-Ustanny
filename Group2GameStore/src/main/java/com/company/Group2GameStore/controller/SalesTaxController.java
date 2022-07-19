@@ -17,8 +17,6 @@ public class SalesTaxController {
     @Autowired
     SalesTaxRepository salesTaxRepository;
 
-    // get all state taxes
-
     @GetMapping("/tax")
     public List<SalesTaxRate> getSalesTax() {
 

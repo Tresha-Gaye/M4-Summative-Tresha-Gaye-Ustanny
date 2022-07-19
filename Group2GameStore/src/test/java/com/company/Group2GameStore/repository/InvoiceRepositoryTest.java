@@ -42,50 +42,36 @@ public class InvoiceRepositoryTest {
 
     @Test
     public void addGetDeleteInvoice() {
-        //save a new game to use in .setItemId()
-        Game newGame = new Game();
-        newGame.setTitle("Game of Thrones");
-        newGame.setEsrbRating("Mature");
-        newGame.setDescription("Awesome Game with numerous alternate endings.");
-        newGame.setPrice(new BigDecimal("14.99"));
-        newGame.setStudio("Warner Bros Entertainment");
-        newGame.setQuantity(25);
-
-        newGame = gameRepository.save(newGame);
+//       // save a new game to use in .setItemId()
+//        Game newGame = new Game();
+//        newGame.setGameId(1);
+//        newGame.setTitle("Game of Thrones");
+//        newGame.setEsrbRating("Mature");
+//        newGame.setDescription("Awesome Game with numerous alternate endings.");
+//        newGame.setPrice(new BigDecimal("20.00"));
+//        newGame.setStudio("Warner Bros Entertainment");
+//        newGame.setQuantity(25);
+//
+//        newGame = gameRepository.save(newGame);
 
         Invoice invoice = new Invoice();
         invoice.setName("PurchaseReceipt1");
         invoice.setStreet("Park Ave");
-        invoice.setCity("New York");
-        invoice.setState("NY");
+        invoice.setCity("Hartford");
+        invoice.setState("CT");
         invoice.setZipCode("10000");
         invoice.setItemType("Games");
-        invoice.setUnitPrice(newGame.getPrice());
-        invoice.setItemId(newGame.getGameId());
+        invoice.setUnitPrice(new BigDecimal("20.00"));
+        invoice.setItemId(1);
+        invoice.setQuantity(5);
+        invoice.setSubtotal(new BigDecimal(100.00));
+        invoice.setTax(new BigDecimal("3.00"));
+        invoice.setProcessingFee(new BigDecimal("1.49"));
+        invoice.setTotal(new BigDecimal("104.49"));
 
-        //subtotal
-        BigDecimal quantityAsBigDecimal = new BigDecimal(newGame.getQuantity());
-        invoice.setSubtotal(invoice.getUnitPrice().multiply(quantityAsBigDecimal));
-
-        //taxed
-        Optional<SalesTaxRate> salesTaxRate = salesTaxRepository.findById(invoice.getState());
-        invoice.setTax(salesTaxRate.get().getRate());
-        BigDecimal taxAmount = invoice.getSubtotal().multiply(invoice.getTax());
-        BigDecimal taxTotal = taxAmount.add(invoice.getSubtotal());
-
-        invoice.setTax(taxTotal);//taxRepo
-
-        //processing fee added
-        Optional<ProcessingFees> processingFeesOptional = processingFeeRepository.findById(invoice.getItemType());
-        invoice.setProcessingFee(processingFeesOptional.get().getFee());
-
-        //quantity
-        invoice.setQuantity(1);
-
-        invoice.setTotal(new BigDecimal(414.215));//calculate
 
         invoice = invoiceRepository.save(invoice);
-//        Invoice invoice2
+
         assertEquals(true, invoiceRepository.existsById(invoice.getInvoiceId()));
 
         //delete
@@ -232,105 +218,10 @@ public class InvoiceRepositoryTest {
         invoice.setName("Receipt");
 
         Invoice invoiceUpdate = invoiceRepository.save(invoice);
-//
-//        Optional<Tshirt> tshirt1 = tshirtRepository.findById(tshirt.gettShirtId());
-//        assertEquals(tshirt1.get(), tshirt);
+
+
         assertEquals(invoiceUpdate.getName(), "Receipt");
 
     }
 
-    //integrity test - happy pass, sad handle 500/400 exception
-
-    //second try
-//    @Test(expected  = DataIntegrityViolationException.class)
-//    @ExpectedException(org.springframework.dao.DataIntegrityViolationException.class)
-//    public void addWithRefIntegrityException() {
-//
-//        Game newGame = new Game();
-//        newGame.setGameId(1);
-//        newGame.setTitle("Game of Thrones");
-//        newGame.setEsrbRating("Mature");
-//        newGame.setDescription("Awesome Game with numerous alternate endings.");
-//        newGame.setPrice(new BigDecimal("14.99"));
-//        newGame.setStudio("Warner Bros Entertainment");
-//        newGame.setQuantity(25);
-//
-//        newGame = gameRepository.save(newGame);
-//
-//        Invoice invoice = new Invoice();
-//        invoice.setName("PurchaseReceipt1");
-//        invoice.setStreet("Park Ave");
-//        invoice.setCity("New York");
-//        invoice.setState("NY");
-//        invoice.setZipCode("10000");
-//        invoice.setItemType("Games");
-//        invoice.setUnitPrice(new BigDecimal(15.0));
-//        invoice.setItemId(-200);
-//
-//        //subtotal
-//        BigDecimal quantityAsBigDecimal = new BigDecimal(newGame.getQuantity());
-//        invoice.setSubtotal(invoice.getUnitPrice().multiply(quantityAsBigDecimal));
-//
-//        //taxed
-//        Optional<SalesTaxRate> salesTaxRate = salesTaxRepository.findById(invoice.getState());
-//        invoice.setTax(salesTaxRate.get().getRate());
-//        BigDecimal taxAmount = invoice.getSubtotal().multiply(invoice.getTax());
-//        BigDecimal taxTotal = taxAmount.add(invoice.getSubtotal());
-//
-//        invoice.setTax(taxTotal);//taxRepo
-//
-//        //processing fee added
-//        Optional<ProcessingFees> processingFeesOptional = processingFeeRepository.findById(invoice.getItemType());
-//        invoice.setProcessingFee(processingFeesOptional.get().getFee());
-//
-//        //quantity
-//        invoice.setQuantity(1);
-//
-//        invoice.setTotal(new BigDecimal(414.215));//calculate
-//
-//        invoice = invoiceRepository.save(invoice);
-////
-////        Optional<Tshirt> tshirt1 = tshirtRepository.findById(tshirt.gettShirtId());
-////        assertEquals(tshirt1.get(), tshirt);
-////        assertEquals(invoiceUpdate.getName(), "Receipt");
-//
-//    }
-
-    //first try
-//    @Test(expected  = DataIntegrityViolationException.class)
-//    public void addWithRefIntegrityException() {
-//        Invoice invoice = new Invoice();
-//        invoice.setName("PurchaseReceipt1");
-//        invoice.setStreet("Park Ave");
-//        invoice.setCity("New York");
-//        invoice.setState("NY");
-//        invoice.setZipCode("10000");
-//        invoice.setItemType("None");
-//        invoice.setUnitPrice(new BigDecimal(15.0));
-//        invoice.setItemId(1);
-//
-//        //quantity
-//        invoice.setQuantity(1);
-//        //subtotal
-////        BigDecimal quantityAsBigDecimal = new BigDecimal(newGame.getQuantity());
-//        invoice.setSubtotal(new BigDecimal(15.0));
-//
-//        //taxed
-////        Optional<SalesTaxRate> salesTaxRate = salesTaxRepository.findById(invoice.getState());
-////        invoice.setTax();
-////        BigDecimal taxAmount = invoice.getSubtotal().multiply(invoice.getTax());
-////        BigDecimal taxTotal = taxAmount.add(invoice.getSubtotal());
-//
-//        invoice.setTax(new BigDecimal(15.9));//taxRepo
-//
-//        //processing fee added
-//        Optional<ProcessingFees> processingFeesOptional = processingFeeRepository.findById(invoice.getItemType());
-//        invoice.setProcessingFee(new BigDecimal(14.99));
-//
-//
-//        invoice.setTotal(new BigDecimal(30.89));//calculate
-//
-//        invoice = invoiceRepository.save(invoice);
-//
-//    }
 }

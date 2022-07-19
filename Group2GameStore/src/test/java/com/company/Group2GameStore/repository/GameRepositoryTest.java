@@ -86,4 +86,86 @@ public class GameRepositoryTest {
         assertEquals(updatedGame.getTitle(), "Game of Thrones: Dragons");
     }
 
+    @Test
+    public void GetGamesByRating() {
+        Game newGame = new Game();
+        newGame.setGameId(0);
+        newGame.setTitle("Game of Thrones");
+        newGame.setEsrbRating("Mature");
+        newGame.setDescription("Awesome Game with numerous alternate endings.");
+        newGame.setPrice(new BigDecimal("14.99"));
+        newGame.setStudio("Warner Bros Entertainment");
+        newGame.setQuantity(25);
+
+        Game otherGame = new Game();
+        otherGame.setGameId(0);
+        otherGame.setTitle("Something With Elves");
+        otherGame.setEsrbRating("Teen");
+        otherGame.setDescription("Elves can fly and climb trees.");
+        otherGame.setPrice(new BigDecimal("29.99"));
+        otherGame.setStudio("Warner Bros Entertainment");
+        otherGame.setQuantity(25);
+
+        gameRepo.save(newGame);
+        gameRepo.save(otherGame);
+
+        List<Game> ratings = gameRepo.findGamesByEsrbRating("Teen");
+        assertEquals(1, ratings.size());
+
+    }
+
+    @Test
+    public void GetGamesByTitle() {
+        Game newGame = new Game();
+        newGame.setGameId(0);
+        newGame.setTitle("Game of Thrones");
+        newGame.setEsrbRating("Mature");
+        newGame.setDescription("Awesome Game with numerous alternate endings.");
+        newGame.setPrice(new BigDecimal("14.99"));
+        newGame.setStudio("Warner Bros Entertainment");
+        newGame.setQuantity(25);
+
+        Game otherGame = new Game();
+        otherGame.setGameId(0);
+        otherGame.setTitle("Something With Elves");
+        otherGame.setEsrbRating("Teen");
+        otherGame.setDescription("Elves can fly and climb trees.");
+        otherGame.setPrice(new BigDecimal("29.99"));
+        otherGame.setStudio("Warner Bros Entertainment");
+        otherGame.setQuantity(25);
+
+        gameRepo.save(newGame);
+        gameRepo.save(otherGame);
+
+        List<Game> title = gameRepo.findGamesByTitle("Something With Elves");
+        assertEquals(1, title.size());
+
+    }
+
+    @Test
+    public void GetGamesByStudio() {
+        Game newGame = new Game();
+        newGame.setGameId(0);
+        newGame.setTitle("Game of Thrones");
+        newGame.setEsrbRating("Mature");
+        newGame.setDescription("Awesome Game with numerous alternate endings.");
+        newGame.setPrice(new BigDecimal("14.99"));
+        newGame.setStudio("Warner Bros Entertainment");
+        newGame.setQuantity(25);
+
+        Game otherGame = new Game();
+        otherGame.setGameId(0);
+        otherGame.setTitle("Something With Elves");
+        otherGame.setEsrbRating("Teen");
+        otherGame.setDescription("Elves can fly and climb trees.");
+        otherGame.setPrice(new BigDecimal("29.99"));
+        otherGame.setStudio("Warner Bros Entertainment");
+        otherGame.setQuantity(25);
+
+        gameRepo.save(newGame);
+        gameRepo.save(otherGame);
+
+        List<Game> studio = gameRepo.findGamesByStudio("Warner Bros Entertainment");
+        assertEquals(2, studio.size());
+    }
 }

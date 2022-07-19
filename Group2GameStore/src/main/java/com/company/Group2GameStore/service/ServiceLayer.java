@@ -41,6 +41,8 @@ public class ServiceLayer {
 
     @Transactional
 
+    // console methods
+
     public List<Console> getAllConsoles(){
         return consoleRepository.findAll();
     }
@@ -86,6 +88,7 @@ public class ServiceLayer {
         consoleRepository.deleteById(id);
     }
 
+    // game methods
     public List<Game> getAllGames(){
         return gameRepository.findAll();
     }
@@ -143,7 +146,7 @@ public class ServiceLayer {
         gameRepository.deleteById(id);
     }
 
-    //T-shirt section
+    //T-shirt methods
 
     public Tshirt createTShirt(Tshirt tshirt){
         return tshirtRepository.save(tshirt);
@@ -153,26 +156,16 @@ public class ServiceLayer {
         tshirtRepository.save(tshirt);
     }
 
-
-
-
     public List<Tshirt> getAllTShirts(){
-//        if (color != null) {
-//            return tshirtRepository.findByColor(color);
-//        }
-//        if (size != null) {
-//            return tshirtRepository.findBySize(size);
-//        }
-//        if (color != null && size != null) {
-//            return tshirtRepository.findByColorAndSize(color, size);
-//        }
+
         return tshirtRepository.findAll();
     }
+
     public List<Tshirt> findByColor(String color) {
 
             return tshirtRepository.findByColor(color);
-
     }
+
     public List<Tshirt> findBySize(String size) {
 
         return tshirtRepository.findBySize(size);
@@ -202,7 +195,7 @@ public class ServiceLayer {
         tshirtRepository.deleteById(id);
    }
 
-   //In voice section
+   // Invoice methods and business logic
 
    public InvoiceViewModel getInvoiceById(int id){
         Optional<Invoice> invoice = invoiceRepository.findById(id);
@@ -241,11 +234,16 @@ public class ServiceLayer {
         invoiceRepository.deleteById(id);
     }
 
+
    public InvoiceViewModel createANewInvoice(InvoiceViewModel ivm){
+
+        // Order quantity must be greater than zero.
        if(ivm.getQuantity() <= 0){
            throw new IllegalArgumentException("Quantity must be greater than zero");
        }
 
+       // Order quantity must be less than or equal to the number of items available in inventory.
+       // The order-processing logic must properly update the quantity available for the item in the order.
        switch(ivm.getItemType()){
            case "Games":
                Optional<Game> foundGame = gameRepository.findById(ivm.getItemId());
@@ -281,17 +279,16 @@ public class ServiceLayer {
                throw new IllegalArgumentException("We don't sell this");
        }
 
+       // calculating subtotal: quantity * price
        BigDecimal quantityAsBigDecimal = new BigDecimal(ivm.getQuantity());
 
        ivm.setSubtotal(ivm.getUnitPrice().multiply(quantityAsBigDecimal));
 
-
+       // calculating tax on the sale: sales Tax rate * subtotal
        Optional<SalesTaxRate> salesTaxRate = salesTaxRepository.findById(ivm.getState());
        System.out.println(salesTaxRate);
 
-
        ivm.setTax(salesTaxRate.get().getRate());
-
        System.out.println(ivm.getSubtotal());
        System.out.println(ivm.getTax());
 
@@ -300,8 +297,10 @@ public class ServiceLayer {
 
        System.out.println(ivm.getSubtotal());
 
-
-
+       // calculating processing fees
+       /*The processing fee is applied only once per order, regardless of the number of items in the order,
+       unless the number of items in the order is greater than 10, in which case an additional processing fee of $15.49 is applied to the order.
+        */
        Optional<ProcessingFees> processingFeesOptional = processingFeeRepository.findById(ivm.getItemType());
 
        ivm.setProcessingFee(processingFeesOptional.get().getFee());
@@ -310,13 +309,13 @@ public class ServiceLayer {
            ivm.setProcessingFee(ivm.getProcessingFee().add(new BigDecimal("15.49")));
        }
 
+       // calculating invoice total: subtotal + tax amount + processing fee
        BigDecimal taxTotal = taxAmount.add(originalSubTotal);
 
        ivm.setTotal(taxTotal.add(ivm.getProcessingFee()));
 
-
+       // instantiating the new invoice object - setting the values calculated above
        Invoice invoice = new Invoice();
-
 
        System.out.println(invoice.getInvoiceId());
 
@@ -333,7 +332,6 @@ public class ServiceLayer {
        invoice.setTax(ivm.getTax());
        invoice.setProcessingFee(ivm.getProcessingFee());
        invoice.setTotal(ivm.getTotal());
-
 
        invoice = invoiceRepository.save(invoice);
 
@@ -362,6 +360,7 @@ public class ServiceLayer {
         return ivmList;
     }
 
+    // the invoice view model - returned to the front end based on what the user posts
     private InvoiceViewModel buildInvoiceViewModel(Invoice invoice){
 
         InvoiceViewModel newInvoice = new InvoiceViewModel();

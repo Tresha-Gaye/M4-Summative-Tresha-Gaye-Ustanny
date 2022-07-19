@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -13,36 +15,53 @@ import java.util.Objects;
 
 public class InvoiceViewModel {
 
-
+    @Column (name = "invoice_id")
     private Integer invoiceId;
 
-    @NotEmpty
+    @NotEmpty(message = "Name must not be empty")
     private String name;
 
-    @NotEmpty
+    @NotEmpty(message = "Street must not be empty")
     private String street;
-    @NotEmpty
+
+    @NotEmpty(message = "City must not be empty")
     private String city;
-    @NotEmpty
+
+    @NotEmpty(message = "State must not be empty")
     private String state;
-    @NotEmpty
+
+    @NotEmpty(message = "Zipcode must not be empty")
+    @Column (name = "zipcode")
     private String zipCode;
-    @NotEmpty
+
+    @NotEmpty(message = "Item type must not be empty")
+    @Column (name = "item_type")
     private String itemType;
-    @NotNull
-    private Integer itemId;
-    @NotNull
-    private BigDecimal unitPrice;
-    @NotNull
+
+    @Min(value = 1, message = "Quantity must be above 0")
     private Integer quantity;
+
+    @NotNull
+    @Column (name = "item_id")
+    private Integer itemId;
+
+    @DecimalMin(value = "00.01", message = "You can't have 0 price!")
+    @Column (name = "unit_price")
+    private BigDecimal unitPrice;
+
     @NotNull
     private BigDecimal subtotal;
 
+    @NotNull
     private BigDecimal tax;
 
+    @NotNull
+    @Column (name = "processing_fee")
     private BigDecimal processingFee;
 
+    @NotNull
     private BigDecimal total;
+
 
     public Integer getInvoiceId() {
         return invoiceId;

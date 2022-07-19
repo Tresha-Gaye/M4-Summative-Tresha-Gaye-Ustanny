@@ -16,7 +16,6 @@ import java.util.Optional;
 public class TshirtController {
     @Autowired
     ServiceLayer serviceLayer;
-//    private static int idCounter = 1;
 
     //Create Tshirt
     @RequestMapping(value = "/tshirt", method = RequestMethod.POST)
@@ -42,7 +41,6 @@ public class TshirtController {
         return serviceLayer.findByColor(color);
     }
     //findbysize
-
     @RequestMapping(value = "/tshirt/size/{size}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Tshirt> getTshirtsBySize(@PathVariable String size) {
