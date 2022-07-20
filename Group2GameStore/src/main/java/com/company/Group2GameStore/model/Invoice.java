@@ -61,7 +61,7 @@ public class Invoice implements Serializable {
 
     @DecimalMin(value = "00.01", message = "You can't have 0 processing fees!")
     @NotNull
-    @Column (name = "processing_fees")
+    @Column (name = "processing_fee")
     private BigDecimal processingFee;
 
     @DecimalMin(value = "00.01", message = "You can't have 0 total!")
