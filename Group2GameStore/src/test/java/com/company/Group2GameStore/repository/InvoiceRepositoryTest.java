@@ -1,6 +1,8 @@
 package com.company.Group2GameStore.repository;
 
-import com.company.Group2GameStore.model.*;
+import com.company.Group2GameStore.model.ProcessingFees;
+import com.company.Group2GameStore.model.Invoice;
+import com.company.Group2GameStore.model.Game;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,47 +22,62 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
 public class InvoiceRepositoryTest {
+
     @Autowired
-    GameRepository gameRepository;
-    @Autowired
-    ConsoleRepository consoleRepository;
-    @Autowired
-    TshirtRepository tshirtRepository;
-    @Autowired
-    InvoiceRepository invoiceRepository;
-    @Autowired
-    SalesTaxRepository salesTaxRepository;
-    @Autowired
-    ProcessingFeeRepository processingFeeRepository;
+    InvoiceRepository invoiceRepo;
+
+    @Autowired private EntityManager entityManager;
+
 
     @Before
     public void setUp() throws Exception {
-        gameRepository.deleteAll();
-        consoleRepository.deleteAll();
-        tshirtRepository.deleteAll();
-        invoiceRepository.deleteAll();
+
+        invoiceRepo.deleteAll();
+
     }
 
     @Test
     public void addGetDeleteInvoice() {
-//       // save a new game to use in .setItemId()
-//        Game newGame = new Game();
-//        newGame.setGameId(1);
-//        newGame.setTitle("Game of Thrones");
-//        newGame.setEsrbRating("Mature");
-//        newGame.setDescription("Awesome Game with numerous alternate endings.");
-//        newGame.setPrice(new BigDecimal("20.00"));
-//        newGame.setStudio("Warner Bros Entertainment");
-//        newGame.setQuantity(25);
-//
-//        newGame = gameRepository.save(newGame);
 
         Invoice invoice = new Invoice();
-        invoice.setName("PurchaseReceipt1");
+        invoice.setName("Bob");
         invoice.setStreet("Park Ave");
         invoice.setCity("Hartford");
         invoice.setState("CT");
-        invoice.setZipCode("10000");
+        invoice.setZipCode("06106");
+        invoice.setItemType("Games");
+        invoice.setUnitPrice(new BigDecimal("20.00"));
+        invoice.setItemId(1);
+        invoice.setQuantity(5);
+        invoice.setSubtotal(new BigDecimal(100.00));
+        invoice.setTax(new BigDecimal("3.00"));
+        invoice.setProcessingFee(new BigDecimal("1.49"));
+        invoice.setTotal(new BigDecimal("104.49"));
+
+        //add to database
+        invoiceRepo.save(invoice);
+
+        assertEquals(true, invoiceRepo.existsById(invoice.getInvoiceId()));
+
+        //delete
+        invoiceRepo.deleteById(invoice.getInvoiceId());
+
+        //check no longer exist
+        assertEquals(false, invoiceRepo.existsById(invoice.getInvoiceId()));
+
+    }
+
+    //get all
+    @Test
+    public void shouldReturnAllInvoices() {
+
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceId(0);
+        invoice.setName("Bob");
+        invoice.setStreet("Park Ave");
+        invoice.setCity("Hartford");
+        invoice.setState("CT");
+        invoice.setZipCode("06106");
         invoice.setItemType("Games");
         invoice.setUnitPrice(new BigDecimal("20.00"));
         invoice.setItemId(1);
@@ -70,99 +88,28 @@ public class InvoiceRepositoryTest {
         invoice.setTotal(new BigDecimal("104.49"));
 
 
-        invoice = invoiceRepository.save(invoice);
-
-        assertEquals(true, invoiceRepository.existsById(invoice.getInvoiceId()));
-
-        //delete
-        invoiceRepository.deleteById(invoice.getInvoiceId());
-
-        //check no longer exist
-        assertEquals(false, invoiceRepository.existsById(invoice.getInvoiceId()));
-
-    }
-
-    //get all
-    @Test
-    public void shouldReturnAllInvoices() {
-        Game newGame = new Game();
-        newGame.setTitle("Game of Thrones");
-        newGame.setEsrbRating("Mature");
-        newGame.setDescription("Awesome Game with numerous alternate endings.");
-        newGame.setPrice(new BigDecimal("14.99"));
-        newGame.setStudio("Warner Bros Entertainment");
-        newGame.setQuantity(25);
-
-        newGame = gameRepository.save(newGame);
-        Invoice invoice = new Invoice();
-        invoice.setName("PurchaseReceipt1");
-        invoice.setStreet("Park Ave");
-        invoice.setCity("New York");
-        invoice.setState("NY");
-        invoice.setZipCode("10000");
-        invoice.setItemType("Games");
-        invoice.setUnitPrice(newGame.getPrice());
-        invoice.setItemId(newGame.getGameId());
-
-        //subtotal
-        BigDecimal quantityAsBigDecimal = new BigDecimal(newGame.getQuantity());
-        invoice.setSubtotal(invoice.getUnitPrice().multiply(quantityAsBigDecimal));
-
-        //taxed
-        Optional<SalesTaxRate> salesTaxRate = salesTaxRepository.findById(invoice.getState());
-        invoice.setTax(salesTaxRate.get().getRate());
-        BigDecimal taxAmount = invoice.getSubtotal().multiply(invoice.getTax());
-        BigDecimal taxTotal = taxAmount.add(invoice.getSubtotal());
-
-        invoice.setTax(taxTotal);//taxRepo
-
-        //processing fee added
-        Optional<ProcessingFees> processingFeesOptional = processingFeeRepository.findById(invoice.getItemType());
-        invoice.setProcessingFee(processingFeesOptional.get().getFee());
-
-        //quantity
-        invoice.setQuantity(1);
-
-        invoice.setTotal(new BigDecimal(414.215));//calculate
-
         Invoice invoice2 = new Invoice();
-        invoice2.setInvoiceId(2);
-        invoice2.setName("PurchaseReceipt1");
+        invoice.setInvoiceId(0);
+        invoice2.setName("Jill");
         invoice2.setStreet("Park Ave");
-        invoice2.setCity("New York");
-        invoice2.setState("NY");
-        invoice2.setZipCode("10000");
+        invoice2.setCity("Hartford");
+        invoice2.setState("CT");
+        invoice2.setZipCode("06106");
         invoice2.setItemType("Games");
-        invoice2.setUnitPrice(newGame.getPrice());
-        invoice2.setItemId(newGame.getGameId());
+        invoice2.setUnitPrice(new BigDecimal("20.00"));
+        invoice2.setItemId(1);
+        invoice2.setQuantity(5);
+        invoice2.setSubtotal(new BigDecimal(100.00));
+        invoice2.setTax(new BigDecimal("3.00"));
+        invoice2.setProcessingFee(new BigDecimal("1.49"));
+        invoice2.setTotal(new BigDecimal("104.49"));
 
-        //subtotal
-        BigDecimal quantityAsBigDecimal2 = new BigDecimal(newGame.getQuantity());
-        invoice2.setSubtotal(invoice2.getUnitPrice().multiply(quantityAsBigDecimal2));
+        // save new invoices
+        invoiceRepo.save(invoice);
+        invoiceRepo.save(invoice2);
 
-        //taxed
-        Optional<SalesTaxRate> salesTaxRate2 = salesTaxRepository.findById(invoice2.getState());
-        invoice2.setTax(salesTaxRate2.get().getRate());
-        BigDecimal taxAmount2 = invoice2.getSubtotal().multiply(invoice2.getTax());
-        BigDecimal taxTotal2 = taxAmount2.add(invoice2.getSubtotal());
-
-        invoice2.setTax(taxTotal2);//taxRepo
-
-        //processing fee added
-        Optional<ProcessingFees> processingFeesOptional2 = processingFeeRepository.findById(invoice2.getItemType());
-        invoice2.setProcessingFee(processingFeesOptional2.get().getFee());
-
-        //quantity
-        invoice2.setQuantity(1);
-
-        invoice2.setTotal(new BigDecimal(414.215));//calculate
-
-        invoiceRepository.save(invoice);
-        invoiceRepository.save(invoice2);
-
-        //second object doesn't need to be saved to variable
-
-        List<Invoice> list = invoiceRepository.findAll();
+        // find all invoices
+        List<Invoice> list = invoiceRepo.findAll();
 
         assertEquals(2, list.size());
     }
@@ -173,54 +120,29 @@ public class InvoiceRepositoryTest {
     @Test
     public void shouldUpdateInvoice() {
 
-        Game newGame = new Game();
-        newGame.setTitle("Game of Thrones");
-        newGame.setEsrbRating("Mature");
-        newGame.setDescription("Awesome Game with numerous alternate endings.");
-        newGame.setPrice(new BigDecimal("14.99"));
-        newGame.setStudio("Warner Bros Entertainment");
-        newGame.setQuantity(25);
-
-        newGame = gameRepository.save(newGame);
-
         Invoice invoice = new Invoice();
-        invoice.setName("PurchaseReceipt1");
+        invoice.setInvoiceId(0);
+        invoice.setName("Bob");
         invoice.setStreet("Park Ave");
-        invoice.setCity("New York");
-        invoice.setState("NY");
-        invoice.setZipCode("10000");
+        invoice.setCity("Hartford");
+        invoice.setState("CT");
+        invoice.setZipCode("06106");
         invoice.setItemType("Games");
-        invoice.setUnitPrice(newGame.getPrice());
-        invoice.setItemId(newGame.getGameId());
+        invoice.setUnitPrice(new BigDecimal("20.00"));
+        invoice.setItemId(1);
+        invoice.setQuantity(5);
+        invoice.setSubtotal(new BigDecimal(100.00));
+        invoice.setTax(new BigDecimal("3.00"));
+        invoice.setProcessingFee(new BigDecimal("1.49"));
+        invoice.setTotal(new BigDecimal("104.49"));
 
-        //subtotal
-        BigDecimal quantityAsBigDecimal = new BigDecimal(newGame.getQuantity());
-        invoice.setSubtotal(invoice.getUnitPrice().multiply(quantityAsBigDecimal));
+        // set new name
+        invoice.setName("Jill");
 
-        //taxed
-        Optional<SalesTaxRate> salesTaxRate = salesTaxRepository.findById(invoice.getState());
-        invoice.setTax(salesTaxRate.get().getRate());
-        BigDecimal taxAmount = invoice.getSubtotal().multiply(invoice.getTax());
-        BigDecimal taxTotal = taxAmount.add(invoice.getSubtotal());
+        // save to repo
+        Invoice invoiceUpdate = invoiceRepo.save(invoice);
 
-        invoice.setTax(taxTotal);//taxRepo
-
-        //processing fee added
-        Optional<ProcessingFees> processingFeesOptional = processingFeeRepository.findById(invoice.getItemType());
-        invoice.setProcessingFee(processingFeesOptional.get().getFee());
-
-        //quantity
-        invoice.setQuantity(1);
-
-        invoice.setTotal(new BigDecimal(414.215));//calculate
-
-
-        invoice.setName("Receipt");
-
-        Invoice invoiceUpdate = invoiceRepository.save(invoice);
-
-
-        assertEquals(invoiceUpdate.getName(), "Receipt");
+        assertEquals(invoiceUpdate.getName(), "Jill");
 
     }
 

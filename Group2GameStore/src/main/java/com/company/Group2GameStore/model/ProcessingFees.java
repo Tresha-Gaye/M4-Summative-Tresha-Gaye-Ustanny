@@ -3,20 +3,19 @@ package com.company.Group2GameStore.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(name = "processing_fees")
+@Table(name = "processing_fee")
 public class ProcessingFees {
-
-
-
     @Id
     @Column(name = "product_type")
     private String productType;
 
+    @NotNull
     private BigDecimal fee;
 
 

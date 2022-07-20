@@ -44,21 +44,21 @@ public class TshirtRepositoryTest {
 //        Optional<Tshirt> tshirt1 = tshirtRepository.findById(tshirt.gettShirtId());
 
         //assert
-        assertEquals(true, tshirtRepository.existsById(tshirt.gettShirtId()));
+        assertEquals(true, tshirtRepository.existsById(tshirt.getTshirtId()));
 
-        tshirtRepository.deleteById(tshirt.gettShirtId());
+        tshirtRepository.deleteById(tshirt.getTshirtId());
 
         //check tshirt1 is no longer present
 //        tshirt1 = tshirtRepository.findById(tshirt.gettShirtId());
 //        assertFalse(tshirt1.isPresent());
-        assertEquals(false, tshirtRepository.existsById(tshirt.gettShirtId()));
+        assertEquals(false, tshirtRepository.existsById(tshirt.getTshirtId()));
     }
 
     //GET all test
     @Test
     public void shouldReturnAllTshirts() {
         Tshirt tshirt1 = new Tshirt();
-        tshirt1.settShirtId(1);
+        tshirt1.setTshirtId(1);
         tshirt1.setTshirt("League of Legends");
         tshirt1.setColor("gold");
         tshirt1.setSize("s");
@@ -69,7 +69,7 @@ public class TshirtRepositoryTest {
         tshirtRepository.save(tshirt1);
 
         Tshirt tshirt2 = new Tshirt();
-        tshirt2.settShirtId(2);
+        tshirt2.setTshirtId(2);
         tshirt2.setTshirt("PUBG");
         tshirt2.setColor("silver");
         tshirt2.setSize("s");
@@ -88,7 +88,7 @@ public class TshirtRepositoryTest {
     @Test
     public void shouldUpdateTshirt() {
         Tshirt tshirt = new Tshirt();
-        tshirt.settShirtId(0);
+        tshirt.setTshirtId(0);
         tshirt.setTshirt("League of Legends");
         tshirt.setColor("gold");
         tshirt.setSize("s");

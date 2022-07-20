@@ -112,12 +112,12 @@ public class ServiceLayerTest {
     private void setUpTshirtRepositoryMock() {
         tshirtRepository = mock(TshirtRepository.class);
         Tshirt tshirt = new Tshirt();
-        tshirt.settShirtId(1);
+        tshirt.setTshirtId(1);
         tshirt.setTshirt("League of Legends");
         tshirt.setColor("gold");
         tshirt.setSize("s");
         tshirt.setDescription("game merch");
-        tshirt.setPrice(new BigDecimal(99.99));
+        tshirt.setPrice(new BigDecimal("99.99"));
         tshirt.setQuantity(100);
 
         Tshirt tshirt2 = new Tshirt();
@@ -125,7 +125,7 @@ public class ServiceLayerTest {
         tshirt2.setColor("gold");
         tshirt2.setSize("s");
         tshirt2.setDescription("game merch");
-        tshirt2.setPrice(new BigDecimal(99.99));
+        tshirt2.setPrice(new BigDecimal("99.99"));
         tshirt2.setQuantity(100);
 
         List<Tshirt> tshirtList = new ArrayList<>();
@@ -280,15 +280,15 @@ public class ServiceLayerTest {
     @Test
     public void saveFindTshirt() {
         Tshirt tshirt = new Tshirt();
-        tshirt.settShirtId(1);
+        tshirt.setTshirtId(1);
         tshirt.setTshirt("League of Legends");
         tshirt.setColor("gold");
         tshirt.setSize("s");
         tshirt.setDescription("game merch");
-        tshirt.setPrice(new BigDecimal(99.99));
+        tshirt.setPrice(new BigDecimal("99.99"));
         tshirt.setQuantity(100);
 
-        Tshirt fromService = service.getTshirtById(tshirt.gettShirtId());
+        Tshirt fromService = service.getTshirtById(tshirt.getTshirtId());
         assertEquals(tshirt, fromService);
     }
 

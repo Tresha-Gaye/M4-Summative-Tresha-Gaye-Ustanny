@@ -3,6 +3,7 @@ package com.company.Group2GameStore.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -15,9 +16,9 @@ import java.util.Objects;
 @Table(name="tshirt")
 public class Tshirt {
     @Id
-    @Column(name="t_shirt_id")
+    @Column(name="tshirt_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer tShirtId;
+    private Integer tshirtId;
 
     @NotEmpty(message = "Tshirt must not be empty")
     private String tshirt;
@@ -31,18 +32,32 @@ public class Tshirt {
     @NotEmpty(message = "Description must not be empty")
     private String description;
 
-    @Min(value = 1, message = "Price must be at least 1")
+    @DecimalMin("1.00")
+    @NotNull(message = "Price can't be less than 1.00")
     private BigDecimal price;
 
     @Min(value = 1, message = "Quantity must be at least 1")
     private Integer quantity;
 
-    public Integer gettShirtId() {
-        return tShirtId;
+    public Tshirt(Integer tshirtId, String tshirt, String color, String size, String description, BigDecimal price, Integer quantity) {
+        this.tshirtId = tshirtId;
+        this.tshirt = tshirt;
+        this.color = color;
+        this.size = size;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
     }
 
-    public void settShirtId(Integer tShirtId) {
-        this.tShirtId = tShirtId;
+    public Tshirt() {
+    }
+
+    public Integer getTshirtId() {
+        return tshirtId;
+    }
+
+    public void setTshirtId(Integer tshirtId) {
+        this.tshirtId = tshirtId;
     }
 
     public String getTshirt() {
@@ -96,20 +111,20 @@ public class Tshirt {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Tshirt)) return false;
         Tshirt tshirt1 = (Tshirt) o;
-        return Objects.equals(tShirtId, tshirt1.tShirtId) && Objects.equals(tshirt, tshirt1.tshirt) && Objects.equals(color, tshirt1.color) && Objects.equals(size, tshirt1.size) && Objects.equals(description, tshirt1.description) && Objects.equals(price, tshirt1.price) && Objects.equals(quantity, tshirt1.quantity);
+        return Objects.equals(tshirtId, tshirt1.tshirtId) && Objects.equals(tshirt, tshirt1.tshirt) && Objects.equals(color, tshirt1.color) && Objects.equals(size, tshirt1.size) && Objects.equals(description, tshirt1.description) && Objects.equals(price, tshirt1.price) && Objects.equals(quantity, tshirt1.quantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(tShirtId, tshirt, color, size, description, price, quantity);
+        return Objects.hash(tshirtId, tshirt, color, size, description, price, quantity);
     }
 
     @Override
     public String toString() {
         return "Tshirt{" +
-                "tShirtId=" + tShirtId +
+                "tshirtId=" + tshirtId +
                 ", tshirt='" + tshirt + '\'' +
                 ", color='" + color + '\'' +
                 ", size='" + size + '\'' +
@@ -119,3 +134,4 @@ public class Tshirt {
                 '}';
     }
 }
+

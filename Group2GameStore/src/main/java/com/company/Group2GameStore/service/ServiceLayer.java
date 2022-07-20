@@ -182,9 +182,9 @@ public class ServiceLayer {
     }
 
     public void updateTshirtById(int id, Tshirt tshirt){
-        if (tshirt.gettShirtId() == null) {
-            tshirt.settShirtId(id);
-        } else if (tshirt.gettShirtId() != id) {
+        if (tshirt.getTshirtId() == null) {
+            tshirt.setTshirtId(id);
+        } else if (tshirt.getTshirtId() != id) {
             throw new IllegalArgumentException("Id does not match");
         }
 
