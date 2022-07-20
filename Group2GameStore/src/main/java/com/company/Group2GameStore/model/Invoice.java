@@ -37,14 +37,12 @@ public class Invoice implements Serializable {
     @Column (name = "zipcode")
     private String zipCode;
 
-
     @NotEmpty(message = "Item type must not be empty")
     @Column (name = "item_type")
     private String itemType;
 
     @Min(value = 1, message = "Quantity must be above 0")
     private Integer quantity;
-
 
     @NotNull
     private Integer itemId;
@@ -53,17 +51,20 @@ public class Invoice implements Serializable {
     @Column (name = "unit_price")
     private BigDecimal unitPrice;
 
-
+    @DecimalMin(value = "00.01", message = "You can't have 0 subtotal!")
     @NotNull
     private BigDecimal subtotal;
 
+    @DecimalMin(value = "00.01", message = "You can't have 0 tax!")
     @NotNull
     private BigDecimal tax;
 
+    @DecimalMin(value = "00.01", message = "You can't have 0 processing fees!")
     @NotNull
     @Column (name = "processing_fees")
     private BigDecimal processingFee;
 
+    @DecimalMin(value = "00.01", message = "You can't have 0 total!")
     @NotNull
     private BigDecimal total;
 
